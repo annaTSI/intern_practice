@@ -110,7 +110,8 @@ function Login() {
                 <h2
                     style={{
                         marginBottom:"20px",
-                        textAlign:"center"
+                        textAlign:"center",
+                    
                     }}
                 >
                     Login
@@ -129,6 +130,7 @@ function Login() {
 
                         placeholder=
                         "Enter Email"
+                        
 
                         value={formData.email}
 
@@ -139,7 +141,7 @@ function Login() {
                             marginBottom:"15px",
                             padding:"12px",
                             width:"100%",
-                            border:"1px solid #ccc",
+                            border:"1px solid #c9a96e",
                             borderRadius:"8px",
                             fontSize:"15px"
                         }}
@@ -236,21 +238,22 @@ function Login() {
 
                         style={{
 
-                            padding:"12px",
+                            padding:"8px",
 
                             cursor:"pointer",
 
-                            width:"100%",
+                            width:"50%",
 
-                            background:"black",
+                            background:"#cfa45e",
 
-                            color:"white",
+                            color:"black",
 
                             border:"none",
 
-                            borderRadius:"8px",
+                            borderRadius:"12px",
 
-                            fontSize:"16px"
+                            fontSize:"16px",
+                            marginLeft:"85px"
                         }}
                     >
                         Login
@@ -270,7 +273,7 @@ function Login() {
 
                             <p
                                 style={{
-                                    color:"green",
+                                    color:"#cfa45e",
                                     marginTop:"15px",
                                     fontWeight:"bold",
                                     textAlign:"center"
