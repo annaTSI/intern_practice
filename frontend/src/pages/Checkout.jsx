@@ -168,8 +168,12 @@ async () => {
 
                 style={{
                     width:"400px",
+                    backgroundColor:"rgba(255,255,255,0.04)",
+                    color:"white",
                     padding:"10px",
-                    marginBottom:"5px"
+                    marginBottom:"15px",
+                    marginTop:"20px"
+                    
                 }}
             />
             {
@@ -177,9 +181,10 @@ async () => {
 
         <p
             style={{
-    color:"red",
+    color:"white",
     marginTop:"1px",
     marginBottom:"20px",
+    marginLeft:"20px",
     fontSize:"14px"
 }}
         >
@@ -205,8 +210,10 @@ async () => {
 
                 style={{
                     width:"400px",
+                    backgroundColor:"rgba(255,255,255,0.04)",
+                    color:"white",
                     padding:"10px",
-                    marginBottom:"5px",
+                    marginBottom:"25px",
                     display:"block"
                 }}
             />
@@ -215,9 +222,10 @@ async () => {
 
         <p
             style={{
-    color:"red",
+    color:"white",
     marginTop:"4px",
     marginBottom:"8px",
+     marginLeft:"20px",
     fontSize:"14px"
 }}
         >
@@ -240,7 +248,9 @@ async () => {
                 ₹ {convenienceFee}
             </h3>
 
-            <h2>
+            <h2 style={{
+                marginTop:"10px",
+            }}>
                 Total :
                 ₹ {totalAmount}
             </h2>
@@ -249,8 +259,11 @@ async () => {
                 onClick={placeOrder}
 
                 style={{
-                    padding:"12px 20px",
-                    cursor:"pointer"
+                    padding:"8px 20px",
+                    cursor:"pointer",
+                    backgroundColor:"#cfa45e",
+                    borderRadius:"10px",
+                    marginTop:"15px"
                 }}
             >
                 Place Order

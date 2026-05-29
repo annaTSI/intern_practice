@@ -230,22 +230,7 @@ body::before{
     color:white;
 }
 
-.active-category{
 
-    background:
-
-    linear-gradient(
-
-    45deg,
-
-    #4e54c8,
-
-    #8f94fb
-
-    ) !important;
-
-    color:white;
-}
 
 /* Filter */
 

@@ -1,306 +1,183 @@
-import {
-    useState
-} from "react";
 
+import { useState } from "react";
 import API from "../services/api";
-
-import {
-    useNavigate
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "../styles/register.css";
 
 function Register() {
 
-    const navigate =
-        useNavigate();
+    const navigate = useNavigate();
 
-    const [formData, setFormData] =
-        useState({
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: ""
+    });
 
-            name:"",
-            email:"",
-            password:""
-        });
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const [successMessage,
-        setSuccessMessage] =
-        useState("");
-
-    const [errorMessage,
-        setErrorMessage] =
-        useState("");
-
-    const [showPassword,
-        setShowPassword] =
-        useState(false);
-        const [loading,setLoading] =
-useState(false);
-
-    const handleChange =
-    (e) => {
+    const handleChange = (e) => {
 
         setFormData({
-
             ...formData,
-
-            [e.target.name]:
-            e.target.value
+            [e.target.name]: e.target.value
         });
     };
 
+    const handleSubmit = async (e) => {
 
-const handleSubmit =
-async (e) => {
+        e.preventDefault();
 
-    e.preventDefault();
+        if (!formData.name.trim()) {
 
-    // NAME VALIDATION
+            setErrorMessage("Enter your name");
+            return;
+        }
 
-    if(!formData.name.trim()){
-
-        setErrorMessage(
-            "Enter your name"
-        );
-
-        return;
-    }
-
-    // EMAIL VALIDATION
-
-    if(!formData.email.trim()){
-
-        setErrorMessage(
-            "Enter your email"
-        );
-        
-// EMAIL FORMAT VALIDATION
-
-if(
-
-    !formData.email
-    .endsWith("@gmail.com")
-
-){
+       if(!formData.email.trim()){
 
     setErrorMessage(
-
-        "Email must contain @gmail.com"
-
+        "Enter your email"
     );
 
     return;
 }
 
+if(
+    !formData.email.endsWith(
+        "@gmail.com"
+    )
+){
 
+    setErrorMessage(
+        "Email must contain @gmail.com"
+    );
 
-        return;
-    }
+    return;
+}
+        if (!formData.password.trim()) {
 
-    // PASSWORD VALIDATION
+            setErrorMessage(
+                "Enter your password"
+            );
 
-    if(!formData.password.trim()){
+            return;
+        }
 
-        setErrorMessage(
-            "Enter your password"
-        );
+        setLoading(true);
+        setErrorMessage("");
 
-        return;
-    }
+        try {
 
-    setLoading(true);
+            await API.post(
+                "/auth/register",
+                formData
+            );
 
-    setErrorMessage("");
+            setSuccessMessage(
+                "Registered Successfully!!"
+            );
 
-    try {
+            setTimeout(() => {
 
-        await API.post(
-            "/auth/register",
-            formData
-        );
+                navigate("/login");
 
-        setSuccessMessage(
-            "Registered Successfully!!"
-        );
+            }, 500);
 
-        setTimeout(()=>{
+        }
 
-            navigate("/login");
+        catch (error) {
 
-        },500);
+            console.log(error);
 
-    }
+            setErrorMessage(
+                "Email already exists"
+            );
+        }
 
-    catch(error){
+        finally {
 
-        console.log(error);
-
-        setErrorMessage(
-            "Email already exists"
-        );
-    }
-
-    finally{
-
-        setLoading(false);
-    }
-};
-
-
-    const inputStyle = {
-
-    display:"block",
-
-    marginBottom:"15px",
-
-    padding:"12px",
-
-    width:"100%",
-
-    border:"1px solid #ccc",
-
-    borderRadius:"8px",
-
-    fontSize:"15px"
-};
+            setLoading(false);
+        }
+    };
 
     return (
 
-        <div
-           style={{
+        <div className="register-container">
 
-    display:"flex",
+            <div className="register-form">
 
-    justifyContent:"center",
-
-    alignItems:"center",
-
-    height:"100vh",
-
-
-
-}}
-        >
-
-            <div
-                style={{
-
-                    background:  "  #221e18",
-                   
-
-                    padding:"40px",
-
-                    borderRadius:"12px",
-
-                    boxShadow:
-                    "0 0 10px rgba(0,0,0,0.1)",
-
-                    width:"350px"
-                }}
-            >
-
-                <h2
-                    style={{
-                        marginBottom:"20px",
-                        textAlign:"center",
-                        color:"white",
-                    }}
-                >
+                <h2 className="register-title">
                     Register
                 </h2>
 
-                <form
-                    onSubmit={handleSubmit}
-                >
+                <form onSubmit={handleSubmit}>
+
+                    <label htmlFor="name">
+                        Name
+                    </label>
 
                     <input
-
+                        id="name"
                         type="text"
-
                         name="name"
-
-                        placeholder=
-                        "Enter Name"
-
+                        placeholder="Enter Name"
                         value={formData.name}
-
                         onChange={handleChange}
-
-                        style={inputStyle}
+                        autoFocus
                     />
+
+                    <label htmlFor="email">
+                        Email
+                    </label>
 
                     <input
-
+                        id="email"
                         type="email"
-
                         name="email"
-
-                        placeholder=
-                        "Enter Email"
-
+                        placeholder="Enter Email"
                         value={formData.email}
-
                         onChange={handleChange}
-
-                        style={inputStyle}
                     />
 
-                    <div
-                        style={{
-                            position:"relative",
-                            width:"100%",
-                            marginBottom:"15px",
-                            
-                        }}
-                    >
+                    <label htmlFor="password">
+                        Password
+                    </label>
+
+                    <div className="password-wrapper">
 
                         <input
-
+                            id="password"
                             type={
                                 showPassword
-                                ?
-                                "text"
-                                :
-                                "password"
+                                    ? "text"
+                                    : "password"
                             }
-
                             name="password"
-
-                            placeholder=
-                            "Enter Password"
-
+                            placeholder="Enter Password"
                             value={formData.password}
-
                             onChange={handleChange}
-style={inputStyle}
                         />
 
                         <span
 
-                            onClick={()=>
-                               setShowPassword(
-(prev)=>!prev
-)
+                            className="toggle-password"
+
+                            onClick={() =>
+                                setShowPassword(
+                                    (prev) => !prev
+                                )
                             }
 
-                            style={{
-
-                                position:"absolute",
-
-                                right:"10px",
-
-                                top:"12px",
-
-                                cursor:"pointer",
-
-                                userSelect:"none"
-                            }}
                         >
 
                             {
                                 showPassword
-                                ?
-                                "🙈"
-                                :
-                                "👁️"
+                                    ? "🙈"
+                                    : "👁️"
                             }
 
                         </span>
@@ -310,14 +187,7 @@ style={inputStyle}
                     {
                         errorMessage && (
 
-                            <p
-                                style={{
-                                    color:"red",
-                                    marginTop:"4px",
-                                    marginBottom:"12px",
-                                    fontSize:"14px"
-                                }}
-                            >
+                            <p className="error-message">
                                 {errorMessage}
                             </p>
                         )
@@ -325,39 +195,21 @@ style={inputStyle}
 
                     <button
                         type="submit"
-                        
-
-                        style={{
-
-                            padding:"8px",
-
-                            cursor:"pointer",
-
-                            width:"50%",
-
-                            background:"#c9a96e",
-
-                            color:"#0a0a0f",
-
-                            border:"none",
-
-                            borderRadius:"10px",
-                            
-
-                            fontSize:"16px",
-                           display:"block",
-margin:"0 auto"
-                        }}
+                        disabled={loading}
                     >
-                        Register
+
+                        {
+                            loading
+                                ? "Registering..."
+                                : "Register"
+                        }
+
                     </button>
 
                     {
                         successMessage && (
 
-                            <p
-                               
-                            >
+                            <p className="success-message">
                                 {successMessage}
                             </p>
                         )
@@ -372,3 +224,4 @@ margin:"0 auto"
 }
 
 export default Register;
+

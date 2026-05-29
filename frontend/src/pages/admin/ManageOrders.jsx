@@ -192,7 +192,7 @@ function ManageOrders() {
                                 </td>
                                 <td>
     {order.phone}
-</td>
+</td>  
 
                                 <td>
                                     ₹ {order.total_amount}

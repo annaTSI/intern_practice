@@ -132,11 +132,15 @@ function Cart() {
 
         <div
             style={{
-                padding:"30px"
+                padding:"30px",
+                
             }}
         >
 
-            <h1>
+            <h1
+            style={{
+                marginBottom:"20px"
+            }}>
                 My Cart
             </h1>
 
@@ -208,7 +212,9 @@ function Cart() {
                                     {item.name}
                                 </h2>
 
-                                <h3>
+                                <h3 style={{
+                                    marginTop:"5px"
+                                }}>
                                     Price :
                                     ₹ {item.price}
                                 </h3>
@@ -274,10 +280,10 @@ function Cart() {
                                     }
 
                                     style={{
-                                        marginTop:"20px",
+                                        marginTop:"10px",
                                         background:"#c9a96e",
                                         color:"black",
-                                        border:"0",
+                                    borderRadius:"10px",
                                         padding:"10px",
                                         cursor:"pointer"
                                     }}
@@ -295,24 +301,32 @@ function Cart() {
             {
                 cartItems.length > 0 && (
 
-                    <div>
+                    <div >
 
-                        <h2>
+                        <h2 style={{
+                marginBottom:"4px"
+            }} >
+
                             Subtotal :
                             ₹ {subtotal}
                         </h2>
+                        
 
-                        <h2>
+                        <h2 style={{
+                marginBottom:"4px"
+            }}>
                             Delivery Fee :
                             ₹ {deliveryFee}
                         </h2>
 
-                        <h2>
+                        <h2 style={{
+                marginBottom:"4px"
+            }}>
                             Convenience Fee :
                             ₹ {convenienceFee}
                         </h2>
 
-                        <h1>
+                        <h1 >
                             Grand Total :
                             ₹ {total}
                         </h1>
@@ -333,7 +347,7 @@ function Cart() {
                                
 
                                 color:"black",
-
+ 
                                 border:"none",
 
                                 cursor:"pointer",

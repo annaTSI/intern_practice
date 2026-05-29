@@ -50,6 +50,7 @@
   background:#c9a96e;
 
     color:white;
+    border-radius: 10px;
 
     border:none;
 
@@ -57,3 +58,4 @@
 
     cursor:pointer;
 }
+

@@ -255,7 +255,7 @@ async () => {
                 alt={product.name}
             />
 
-            <div>
+            <div  className="product-info"> 
 
                 <h2>
                     {product.name}
@@ -301,7 +301,10 @@ async () => {
                     onClick={addToWishlist}
 
                     style={{
-                        marginLeft:"10px"
+                        backgroundColor:"#cfa45e",
+                        marginLeft:"10px",
+                        
+                        
                     }}
                 >   
                     Add To Wishlist
@@ -334,18 +337,20 @@ fontSize:"14px"
 }
                 <hr />
 
-                <h2>
+                <h2 
+                 style={{
+                        marginTop:"20px"
+                    }}>
                     Reviews
                 </h2>
 
                 <div
-                    style={{
-                        marginTop:"20px"
-                    }}
+                 
                 >
 
                     <select
-
+                      className="product-rating"
+                    
                         value={rating}
 
                         onChange={(e)=>
@@ -354,12 +359,15 @@ fontSize:"14px"
                             )
                         }
                     >
-
-                        <option value="5">
+                                         
+                        <option value="5" 
+                        >
+                                      
                             5 Star
                         </option>
 
-                        <option value="4">
+                        <option value="4" 
+                        >
                             4 Star
                         </option>
 
@@ -374,12 +382,13 @@ fontSize:"14px"
                         <option value="1">
                             1 Star
                         </option>
+                       
 
                     </select>
 
                     <br /><br />
 
-                    <textarea
+                    <textarea 
 
                         placeholder=
                         "Write Review"
@@ -395,6 +404,8 @@ fontSize:"14px"
                         rows="4"
 
                         style={{
+                            backgroundColor:"rgba(255,255,255,0.04)",
+                            color:"white",
                             width:"300px"
                         }}
                     />
@@ -420,7 +431,7 @@ fontSize:"14px"
 
         :
 
-        "black",
+        "#cfa45e",
 
         color:"white",
 
@@ -475,6 +486,7 @@ fontSize:"14px"
                                 key={review.id}
 
                                 style={{
+                                
                                     marginBottom:"20px"
                                 }}
                             >
