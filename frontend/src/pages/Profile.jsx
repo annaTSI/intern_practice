@@ -1,41 +1,29 @@
-import {
-    useContext,
-    useState
-} from "react";
-
+import { useState } from "react";
 import API from "../services/api";
-
-import {
-    AuthContext
-} from "../context/AuthContext";
+import "../styles/profile.css";
 
 function Profile() {
 
-    const {
+    const user =
+    JSON.parse(
+        localStorage.getItem("user")
+    );
 
-        user,
+    const [formData,setFormData] =
+    useState({
 
-        setUser
+        name:user?.name || "",
 
-    } = useContext(AuthContext);
+        email:user?.email || "",
 
-    const [formData,
-        setFormData] =
-        useState({
+        password:""
+    });
 
-            name:user?.name || "",
-
-            email:user?.email || "",
-
-            password:""
-        });
-
-    const [message,
-        setMessage] =
-        useState("");
+    const [message,setMessage] =
+    useState("");
 
     const handleChange =
-    (e) => {
+    (e)=>{
 
         setFormData({
 
@@ -47,193 +35,137 @@ function Profile() {
     };
 
     const handleSubmit =
-    async (e) => {
+    async(e)=>{
 
         e.preventDefault();
 
-        try {
+        try{
 
             const res =
-                await API.put(
+            await API.put(
 
-                    "/auth/update-profile",
+                "/auth/profile",
 
-                    formData
-                );
-
-            setMessage(
-                "Profile Updated!!"
+                formData
             );
 
-            setUser({
+            const updatedUser = {
 
                 ...user,
 
                 name:formData.name,
 
                 email:formData.email
-            });
+            };
 
-        } catch (error) {
+            localStorage.setItem(
+
+                "user",
+
+                JSON.stringify(
+                    updatedUser
+                )
+            );
+
+            setMessage(
+                res.data.message
+            );
+
+            setTimeout(()=>{
+
+                window.location.reload();
+
+            },1000);
+
+        }
+
+        catch(error){
 
             console.log(error);
+
+            setMessage(
+                "Profile update failed"
+            );
         }
     };
 
-    return (
+    return(
 
-        <div
-            style={{
+        <div className="profile-page">
 
-                display:"flex",
+            <div className="profile-card">
 
-                justifyContent:"center",
-
-                alignItems:"center",
-
-                height:"100vh",
-
-                background:"#f5f5f5"
-            }}
-        >
-
-            <div
-                style={{
-
-                    background:"white",
-
-                    padding:"40px",
-
-                    borderRadius:"12px",
-
-                    boxShadow:
-                    "0 0 10px rgba(0,0,0,0.1)",
-
-                    width:"350px"
-                }}
-            >
-
-                <h2
-                    style={{
-                        textAlign:"center",
-                        marginBottom:"20px"
-                    }}
-                >
+                <h2>
                     My Profile
                 </h2>
 
                 <form
-                    onSubmit={handleSubmit}
+                onSubmit={handleSubmit}
                 >
 
                     <input
 
-                        type="text"
+                    type="text"
 
-                        name="name"
+                    name="name"
 
-                        placeholder=
-                        "Enter Name"
+                    placeholder="Name"
 
-                        value={formData.name}
+                    value={formData.name}
 
-                        onChange={handleChange}
+                    onChange={handleChange}
 
-                        style={{
-                            width:"100%",
-                            padding:"12px",
-                            marginBottom:"15px",
-                            borderRadius:"8px",
-                            border:"1px solid #ccc"
-                        }}
                     />
 
                     <input
 
-                        type="email"
+                    type="email"
 
-                        name="email"
+                    name="email"
 
-                        placeholder=
-                        "Enter Email"
+                    placeholder="Email"
 
-                        value={formData.email}
+                    value={formData.email}
 
-                        onChange={handleChange}
+                    onChange={handleChange}
 
-                        style={{
-                            width:"100%",
-                            padding:"12px",
-                            marginBottom:"15px",
-                            borderRadius:"8px",
-                            border:"1px solid #ccc"
-                        }}
                     />
 
                     <input
 
-                        type="password"
+                    type="password"
 
-                        name="password"
+                    name="password"
 
-                        placeholder=
-                        "Enter New Password"
+                    placeholder="New Password"
 
-                        value={formData.password}
+                    value={formData.password}
 
-                        onChange={handleChange}
+                    onChange={handleChange}
 
-                        style={{
-                            width:"100%",
-                            padding:"12px",
-                            marginBottom:"15px",
-                            borderRadius:"8px",
-                            border:"1px solid #ccc"
-                        }}
                     />
 
                     <button
-
-                        type="submit"
-
-                        style={{
-
-                            width:"100%",
-
-                            padding:"12px",
-
-                            background:"black",
-
-                            color:"white",
-
-                            border:"none",
-
-                            borderRadius:"8px",
-
-                            cursor:"pointer"
-                        }}
+                    type="submit"
                     >
 
-                        Update Profile
+                    Update Profile
 
                     </button>
 
-                    {
-                        message && (
-
-                            <p
-                                style={{
-                                    color:"green",
-                                    marginTop:"15px",
-                                    textAlign:"center"
-                                }}
-                            >
-                                {message}
-                            </p>
-                        )
-                    }
-
                 </form>
+
+                {
+
+                message &&
+
+                <p>
+
+                    {message}
+
+                </p>
+
+                }
 
             </div>
 

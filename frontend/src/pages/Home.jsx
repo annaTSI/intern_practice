@@ -21,15 +21,20 @@ function Home() {
 
     const [selectedCategory,
         setSelectedCategory] =
-        useState("All");
+        useState("All");                
 
     const [sortType,
         setSortType] =
         useState("");
-
+    
     const [priceRange,
         setPriceRange] =
         useState("");
+        const [currentPage,
+    setCurrentPage] =
+    useState(1);
+
+const productsPerPage = 10;
 
     const fetchProducts =
     async () => {
@@ -54,6 +59,16 @@ function Home() {
         fetchProducts();
 
     },[]);
+    useEffect(() => {
+
+    setCurrentPage(1);
+
+}, [
+    search,
+    selectedCategory,
+    sortType,
+    priceRange
+]);
 
     // UNIQUE CATEGORIES
 
@@ -147,6 +162,24 @@ function Home() {
             b.price - a.price
         );
     }
+    const lastIndex =
+    currentPage * productsPerPage;
+
+const firstIndex =
+    lastIndex - productsPerPage;
+
+const currentProducts =
+    filteredProducts.slice(
+        firstIndex,
+        lastIndex
+    );
+
+const totalPages =
+    Math.ceil(
+        filteredProducts.length
+        /
+        productsPerPage
+    );
 
     return (
 
@@ -323,7 +356,7 @@ function Home() {
 >
 
     {
-        filteredProducts.map(
+        currentProducts.map(
             (product)=>(
 
                 <ProductCard
@@ -339,11 +372,87 @@ function Home() {
     }
 
 </div>
+{
+    totalPages > 1 && (
+
+        <div className="pagination">
+
+            <button
+
+                disabled={
+                    currentPage === 1
+                }
+
+                onClick={() =>
+                    setCurrentPage(
+                        currentPage - 1
+                    )
+                }
+            >
+                Previous
+            </button>
+
+            {
+                [...Array(totalPages)]
+                .map((_, index) => (
+
+                    <button
+
+                        key={index}
+
+                        className={
+                            currentPage ===
+                            index + 1
+
+                            ?
+
+                            "active-page"
+
+                            :
+
+                            ""
+                        }
+
+                        onClick={() =>
+                            setCurrentPage(
+                                index + 1
+                            )
+                        }
+                    >
+                        {index + 1}
+                    </button>
+
+                ))
+            }
+
+            <button
+
+                disabled={
+                    currentPage ===
+                    totalPages
+                }
+
+                onClick={() =>
+                    setCurrentPage(
+                        currentPage + 1
+                    )
+                }
+            >
+                Next
+            </button>
+
+        </div>
+    )
+}
+
 
 
 
 
 </div>
+
+
+
 
 );
 }

@@ -10,12 +10,13 @@ const {
 
     login,
 
-    logout
+    logout,
+
+    updateProfile
 
 } = require(
     "../controllers/authController"
 );
-
 
 // REGISTER
 
@@ -38,6 +39,11 @@ router.post(
 router.get(
     "/logout",
     logout
+);
+
+router.put(
+    "/profile",
+    updateProfile
 );
 
 module.exports =

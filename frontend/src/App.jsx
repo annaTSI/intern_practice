@@ -23,6 +23,7 @@ import Orders from "./pages/Orders";
 import EditProduct from "./pages/admin/EditProduct";
 import ManageOrders from "./pages/admin/ManageOrders";
 import Wishlist from "./pages/Wishlist";
+import Profile from "./pages/Profile";
 
 
 function App() {
@@ -126,8 +127,17 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                  <Route
+    path="/profile"
+    element={
+        <ProtectedRoute>
+            <Profile />     
+        </ProtectedRoute>   
+    }
+/>
 
             </Routes>
+          
             <Footer/>
             
         </>

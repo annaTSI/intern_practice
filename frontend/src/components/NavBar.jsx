@@ -13,7 +13,8 @@ import {
     FaHeart,
     FaBoxOpen,
     FaSignInAlt,
-    FaUserPlus
+    FaUserPlus,
+    FaUser
 } from "react-icons/fa";
 
 import {
@@ -243,6 +244,18 @@ style={iconStyle}
 />
 
 Orders
+
+</Link>
+<Link
+to="/profile"
+style={linkStyle}
+>
+
+<FaUser
+style={iconStyle}
+/>
+
+Profile
 
 </Link>
 
