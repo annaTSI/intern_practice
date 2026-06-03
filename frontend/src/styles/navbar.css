@@ -13,7 +13,7 @@ body{
     display:flex;
     justify-content:space-between;
     align-items:center;
-}
+}        
 
 .nav-links{
 
@@ -47,4 +47,54 @@ body{
     border:none;
 
     cursor:pointer;
+}
+.nav-link{
+
+    transition:all 0.3s ease;
+}
+
+.nav-link:hover{
+
+    color:#cfa45e !important;
+
+    transform:translateY(-2px);
+}
+
+.nav-link:hover svg{
+
+    color:#cfa45e !important;
+}
+
+.logout-btn{
+
+    transition:all 0.3s ease;
+}
+
+.logout-btn:hover{
+
+    background:#cfa45e !important;
+
+    color:#0a0a0f !important;
+
+    border-color:#cfa45e !important;
+}
+
+.logo{
+
+    transition:all 0.3s ease;
+}
+
+.logo:hover{
+
+    transform:scale(1.03);
+}
+.nav-link,
+.nav-link:visited{
+
+    color:white !important;
+}
+
+.nav-link svg{
+
+    color:white !important;
 }

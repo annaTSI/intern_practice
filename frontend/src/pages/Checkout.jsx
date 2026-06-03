@@ -20,6 +20,9 @@ function Checkout() {
 
     const [phone, setPhone] =
         useState("");
+        const [paymentMethod,
+    setPaymentMethod] =
+    useState("COD");
     const [addressError,
     setAddressError] =
     useState("");
@@ -124,15 +127,19 @@ async () => {
     }
 
     try {
+        
 
-        const res =
-            await API.post(
-                "/orders/place-order",
-                {
-                    address,
-                    phone
-                }
-            );
+        console.log("Selected Payment:", paymentMethod);
+
+const res =
+await API.post(
+    "/orders/place-order",
+    {
+        address,
+        phone,
+        paymentMethod
+    }
+);
 
         navigate("/orders");
 
@@ -233,6 +240,51 @@ async () => {
         </p>
     )
 }
+<h3>Select Payment Method</h3>
+
+<div style={{marginBottom:"20px"}}>
+
+    <label>
+
+        <input
+            type="radio"
+            value="COD"
+            checked={
+                paymentMethod === "COD"
+            }
+            onChange={(e)=>
+                setPaymentMethod(
+                    e.target.value
+                )
+            }
+        />
+
+        Cash On Delivery
+
+    </label>
+
+    <br/><br/>
+
+    <label>
+
+        <input
+    type="radio"
+    value="ONLINE"
+    checked={
+        paymentMethod === "ONLINE"
+    }
+    onChange={(e)=>
+        setPaymentMethod(
+            e.target.value
+        )
+    }
+/>
+
+        Online Payment
+
+    </label>
+
+</div>
             <h3>
                 Subtotal :
                 ₹ {subtotal}

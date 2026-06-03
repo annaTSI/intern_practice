@@ -7,6 +7,7 @@ import {
     useContext
 } from "react";
 
+
 import {
     FaHome,
     FaShoppingCart,
@@ -20,6 +21,9 @@ import {
 import {
     CartContext
 } from "../context/CartContext";
+
+
+        
 
 function Navbar() {
 
@@ -60,27 +64,25 @@ function Navbar() {
 
         window.location.reload();
     };
-    const linkStyle={
+const linkStyle = {
 
-display:"flex",
+    display:"flex",
 
-alignItems:"center",
+    alignItems:"center",
 
-gap:"8px",
+    gap:"8px",
 
-color:"#ddd",
+    textDecoration:"none",
 
-textDecoration:"none",
+    fontSize:"18px",
 
-fontSize:"18px"
-
+    color:"white"
 };
-
 const iconStyle = {
 
     fontSize:"16px",
 
-    color:"#888"
+    
 
 };
 
@@ -113,18 +115,15 @@ const iconStyle = {
             }}
         >
 
-           <h1
+         <h1
+className="logo"
 style={{
-
 marginLeft:"15px",
-
 fontSize:"38px",
-
 fontWeight:"bold",
-
 letterSpacing:"-1px"
-
 }}
+
 >
 
             E
@@ -162,9 +161,10 @@ marginRight:"20px"
 }}
 >
 
-           <Link
+     <Link
 to="/"
 style={linkStyle}
+className="nav-link"
 >
 
 <FaHome
@@ -185,10 +185,12 @@ Home
             <Link
 to="/cart"
 style={linkStyle}
+className="nav-link"
 >
 
 <FaShoppingCart
 style={iconStyle}
+
 />
 
 {
@@ -211,6 +213,7 @@ cartCount>0
             <Link
 to="/wishlist"
 style={linkStyle}
+className="nav-link"
 >
 
 <FaHeart
@@ -237,6 +240,7 @@ wishlistCount>0
             <Link
 to="/orders"
 style={linkStyle}
+className="nav-link"
 >
 
 <FaBoxOpen
@@ -249,6 +253,7 @@ Orders
 <Link
 to="/profile"
 style={linkStyle}
+className="nav-link"
 >
 
 <FaUser
@@ -272,13 +277,14 @@ Profile
 
             style={{
 
-                color:"#ddd",
+                color:"white",
 
                 textDecoration:"none",
 
                 fontSize:"18px"
 
             }}
+            className="nav-link"
 
             >
 
@@ -315,30 +321,17 @@ Welcome,
 
 
             <button
-
-            onClick={logout}
-
-            style={{
-
-                background:"transparent",
-
-                border:
-                "1px solid #444",
-
-                color:"white",
-
-                padding:
-                "12px 25px",
-
-                borderRadius:
-                "10px",
-
-                cursor:"pointer",
-
-                transition:"0.3s"
-            }}
-
-            >
+onClick={logout}
+className="logout-btn"
+style={{
+background:"transparent",
+border:"1px solid #444",
+color:"white",
+padding:"12px 25px",
+borderRadius:"10px",
+cursor:"pointer"
+}}
+>
 
             Logout
 
@@ -360,6 +353,7 @@ Welcome,
             <Link
 to="/login"
 style={linkStyle}
+className="nav-link"
 >
 
 <FaSignInAlt
@@ -371,9 +365,10 @@ Login
 </Link>
 
 
-            <Link
+          <Link
 to="/register"
 style={linkStyle}
+className="nav-link"
 >
 
 <FaUserPlus

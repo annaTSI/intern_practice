@@ -91,9 +91,9 @@ async (id) => {
                     >
 
                         <h2>
-                            Order ID :
-                            {order.id}
-                        </h2>
+    Order ID :
+    {order.order_id}
+</h2>
 
                         <h3>
                             Address :
@@ -107,14 +107,45 @@ async (id) => {
 </h3>
 
                         <h3>
-                            Total :
-                            ₹ {order.total_amount}
-                        </h3>
+    Total :
+    ₹ {order.total_amount}
+</h3>
 
-                        <h3>
-                            Status :
-                            {order.status}
-                        </h3>
+<h3>
+    Payment Method :
+    {order.payment_method}
+</h3>
+
+<h3>
+    Payment Status :
+
+    <span
+        style={{
+
+            color:
+
+            order.payment_status === "Paid"
+
+            ?
+
+            "lightgreen"
+
+            :
+
+            "#c9a96e",
+
+            marginLeft:"8px"
+        }}
+    >
+        {order.payment_status}
+    </span>
+
+</h3>
+
+<h3>
+    Status :
+    {order.status}
+</h3>
                         {
     order.status === "Placed" && (
 

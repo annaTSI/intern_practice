@@ -16,10 +16,12 @@ exports.placeOrder =
     const user_id =
         req.session.user.id;
 
-    const {
+   const {
     address,
-    phone
+    phone,
+    paymentMethod
 } = req.body;
+console.log(req.body);
 
     const cartSql =
 
@@ -102,20 +104,30 @@ exports.placeOrder =
     total_amount,
     address,
     phone,
+    payment_method,
+    payment_status,
     status
 )
 
-VALUES (?,?,?,?,?)`;
+VALUES (?,?,?,?,?,?,?)`;
 
             db.query(
                 orderSql,
                 [
-                    user_id,
-                    total_amount,
-                    address,
-                    phone,
-                    "Placed"
-                ],
+    user_id,
+    total_amount,
+    address,
+    phone,
+    paymentMethod,
+
+    paymentMethod === "COD"
+    ?
+    "Pending"
+    :
+    "Paid",
+
+    "Placed"
+],
                 (err2, orderResult) => {
 
                     if(err2){
@@ -215,34 +227,38 @@ exports.getMyOrders =
 
     `SELECT
 
-        orders.id AS order_id,
+    orders.id AS order_id,
 
-        orders.address,
-        orders.phone,
+    orders.address,
+    orders.phone,
 
-        orders.total_amount,
+    orders.total_amount,
 
-        orders.status,
+    orders.payment_method,
 
-        products.name AS product_name,
+    orders.payment_status,
 
-        products.image,
+    orders.status,
 
-        order_items.quantity,
+    products.name AS product_name,
 
-        order_items.price
+    products.image,
 
-    FROM orders
+    order_items.quantity,
 
-    JOIN order_items
-    ON orders.id = order_items.order_id
+    order_items.price
 
-    JOIN products
-    ON order_items.product_id = products.id
+FROM orders
 
-    WHERE orders.user_id=?
+JOIN order_items
+ON orders.id = order_items.order_id
 
-    ORDER BY orders.id DESC`;
+JOIN products
+ON order_items.product_id = products.id
+
+WHERE orders.user_id=?
+
+ORDER BY orders.id DESC`;
 
     db.query(
         sql,
@@ -272,37 +288,41 @@ exports.getAllOrders =
 
     `SELECT
 
-        orders.id AS order_id,
+    orders.id AS order_id,
 
-        orders.total_amount,
+    orders.total_amount,
 
-        orders.address,
-        orders.phone,
+    orders.address,
+    orders.phone,
 
-        orders.status,
+    orders.payment_method,
 
-        users.name AS user_name,
+    orders.payment_status,
 
-        products.name AS product_name,
+    orders.status,
 
-        products.image,
+    users.name AS user_name,
 
-        order_items.quantity,
+    products.name AS product_name,
 
-        order_items.price
+    products.image,
 
-    FROM orders
+    order_items.quantity,
 
-    JOIN users
-    ON orders.user_id = users.id
+    order_items.price
 
-    JOIN order_items
-    ON orders.id = order_items.order_id
+FROM orders
 
-    JOIN products
-    ON order_items.product_id = products.id
+JOIN users
+ON orders.user_id = users.id
 
-    ORDER BY orders.id DESC`;
+JOIN order_items
+ON orders.id = order_items.order_id
+
+JOIN products
+ON order_items.product_id = products.id
+
+ORDER BY orders.id DESC`;
 
     db.query(
         sql,
