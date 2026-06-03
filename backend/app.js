@@ -41,7 +41,10 @@ app.use(express.urlencoded({
 
 app.use(cors({
 
-    origin:"http://localhost:5173",
+    origin:[
+        "http://localhost:5173",
+        "http://10.73.53.200:5173"
+    ],
 
     credentials:true
 }));
@@ -115,6 +118,7 @@ app.get("/", (req, res) => {
 
 app.listen(
     process.env.PORT,
+    "0.0.0.0",
     () => {
 
         console.log(

@@ -8,6 +8,7 @@ import API from "../services/api";
 import { useNavigate }
 from "react-router-dom";
 
+
 function Checkout() {
 
     const navigate = useNavigate();
@@ -26,6 +27,9 @@ function Checkout() {
     const [addressError,
     setAddressError] =
     useState("");
+   const [suggestions,
+    setSuggestions] =
+    useState([]);
 
 const [phoneError,
     setPhoneError] =
@@ -67,6 +71,111 @@ const [phoneError,
         subtotal +
         deliveryFee +
         convenienceFee;
+        const searchAddress =
+async (value) => {
+
+    setAddress(value);
+
+    if(value.length < 3){
+
+        setSuggestions([]);
+
+        return;
+    }
+
+    try{
+
+        const res =
+        await fetch(
+
+`https://api.geoapify.com/v1/geocode/autocomplete?text=${value}&apiKey=d26871b8ebaa49dab90dae7876c5bb71`
+
+        );
+
+        const data =
+        await res.json();
+
+        setSuggestions(
+            data.features || []
+        );
+
+    }catch(error){
+
+        console.log(error);
+    }
+};const getCurrentLocation = () => {
+
+    if(!navigator.geolocation){
+
+        alert(
+            "Geolocation not supported"
+        );
+
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        async (position) => {
+
+            const lat =
+            position.coords.latitude;
+
+            const lon =
+            position.coords.longitude;
+            console.log("Latitude:", lat);
+console.log("Longitude:", lon);
+            try{
+
+                const res =
+                await fetch(
+
+`https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&apiKey=d26871b8ebaa49dab90dae7876c5bb71`
+
+                );
+
+                const data =
+                await res.json();
+
+                if(
+                    data.features &&
+                    data.features.length > 0
+                ){
+
+                    setAddress(
+
+                        data.features[0]
+                        .properties
+                        .formatted
+
+                    );
+                }
+
+            }catch(error){
+
+                console.log(error);
+            }
+        },
+
+(error) => {
+
+    console.log(error);
+
+    alert(error.message);
+
+    console.log(
+        "Code:",
+        error.code
+    );
+},
+
+{
+    enableHighAccuracy:true,
+    timeout:10000,
+    maximumAge:0
+}
+);
+};
 
    const placeOrder =
 async () => {
@@ -158,31 +267,134 @@ await API.post(
 
             <h2>Checkout</h2>
 
-            <textarea
+            
 
-                rows="5"
 
-                placeholder=
-                "Enter delivery address"
 
-                value={address}
+<input
 
-                onChange={(e)=>
-                    setAddress(
-                        e.target.value
-                    )
-                }
+    type="text"
 
-                style={{
-                    width:"400px",
-                    backgroundColor:"rgba(255,255,255,0.04)",
-                    color:"white",
-                    padding:"10px",
-                    marginBottom:"15px",
-                    marginTop:"20px"
-                    
-                }}
-            />
+    placeholder=
+    "Search Delivery Address"
+
+    value={address}
+
+    onChange={(e)=>
+
+        searchAddress(
+            e.target.value
+        )
+    }
+
+    style={{
+
+        width:"400px",
+
+        backgroundColor:
+        "rgba(255,255,255,0.04)",
+
+        color:"white",
+
+        padding:"10px",
+
+        marginBottom:"15px",
+
+        marginTop:"20px"
+    }}
+/>
+{
+suggestions.length > 0 && (
+
+<div
+style={{
+
+background:"#1a1a1a",
+
+width:"400px",
+
+border:"1px solid #444",
+
+maxHeight:"200px",
+
+overflowY:"auto"
+}}
+>
+
+{
+suggestions.map(
+(place,index)=>(
+
+<div
+
+key={index}
+
+onClick={()=>{
+
+setAddress(
+
+place.properties
+.formatted
+);
+
+setSuggestions([]);
+}}
+
+style={{
+
+padding:"10px",
+
+cursor:"pointer",
+
+borderBottom:
+"1px solid #333"
+}}
+>
+
+{
+place.properties
+.formatted
+}
+
+</div>
+
+))
+}
+
+</div>
+
+)
+}
+<button
+
+    type="button"
+
+    onClick={getCurrentLocation}
+
+    style={{
+
+        padding:"10px",
+
+        marginTop:"10px",
+
+        background:"#cfa45e",
+
+        color:"black",
+
+        border:"none",
+
+        borderRadius:"8px",
+
+        cursor:"pointer"
+    }}
+>
+
+📍 Use My Current Location
+
+</button>
+
+
+
             {
     addressError && (
 
