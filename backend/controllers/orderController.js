@@ -1,7 +1,8 @@
 const razorpay =
 require("../config/razorpay");
 const db = require("../config/db");
-
+const PDFDocument =
+require("pdfkit");
 exports.createPayment =
 async (req,res) => {
 
@@ -391,14 +392,18 @@ ORDER BY orders.id DESC`;
 exports.updateOrderStatus =
 (req, res) => {
 
-    const { status } =
-        req.body;
+    const {
+        status,
+        payment_status
+    } = req.body;
 
     const sql =
 
     `UPDATE orders
 
-     SET status=?
+     SET
+     status=?,
+     payment_status=?
 
      WHERE id=?`;
 
@@ -406,21 +411,21 @@ exports.updateOrderStatus =
         sql,
         [
             status,
+            payment_status,
             req.params.id
         ],
         (err) => {
 
             if(err){
 
-                console.log(err);
-
-                return res.status(500).json(err);
+                return res
+                .status(500)
+                .json(err);
             }
 
             res.json({
-
                 message:
-                "Order Status Updated"
+                "Updated"
             });
         }
     );
@@ -534,4 +539,137 @@ exports.cancelOrder =
             "Server Error"
         });
     }
+};
+exports.downloadInvoice =
+(req,res) => {
+
+    const orderId =
+    req.params.id;
+
+    const sql =
+
+    `SELECT
+
+    orders.*,
+
+    products.name AS product_name,
+
+    order_items.quantity,
+
+    order_items.price
+
+    FROM orders
+
+    JOIN order_items
+    ON orders.id =
+    order_items.order_id
+
+    JOIN products
+    ON order_items.product_id =
+    products.id
+
+    WHERE orders.id=?`;
+
+    db.query(
+        sql,
+        [orderId],
+        (err,result)=>{
+
+            if(err){
+
+                return res
+                .status(500)
+                .json(err);
+            }
+
+            if(result.length===0){
+
+                return res
+                .status(404)
+                .json({
+                    message:
+                    "Order not found"
+                });
+            }
+
+            const order =
+            result[0];
+
+            const doc =
+            new PDFDocument();
+
+            res.setHeader(
+                "Content-Type",
+                "application/pdf"
+            );
+
+            res.setHeader(
+                "Content-Disposition",
+                `attachment; filename=invoice_${orderId}.pdf`
+            );
+
+            doc.pipe(res);
+
+            doc.fontSize(22)
+            .text(
+                "E-Commerce Invoice",
+                {
+                    align:"center"
+                }
+            );
+
+            doc.moveDown();
+
+            doc.fontSize(14)
+            .text(
+                `Order ID: ${orderId}`
+            );
+
+            doc.text(
+                `Address: ${order.address}`
+            );
+
+            doc.text(
+                `Phone: ${order.phone}`
+            );
+
+            doc.text(
+                `Payment Method: ${order.payment_method}`
+            );
+
+            doc.text(
+                `Payment Status: ${order.payment_status}`
+            );
+
+            doc.moveDown();
+
+            doc.text("Products");
+
+            doc.moveDown();
+
+            result.forEach(item=>{
+
+                doc.text(
+`${item.product_name}
+Qty: ${item.quantity}
+Price: ₹${item.price}
+`
+                );
+            });
+
+            doc.moveDown();
+
+            doc.text(
+`Total Amount: ₹${order.total_amount}`
+            );
+
+            doc.moveDown();
+
+            doc.text(
+                "Thank You For Shopping!"
+            );
+
+            doc.end();
+        }
+    );
 };

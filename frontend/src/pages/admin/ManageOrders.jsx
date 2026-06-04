@@ -54,7 +54,36 @@ function ManageOrders() {
             console.log(error);
         }
     };
+const updatePaymentStatus =
+async (id, payment_status) => {
 
+    try {
+
+        const res =
+        await API.put(
+            `/orders/admin/update-status/${id}`,
+            {
+                status:
+                orders.find(
+                    o =>
+                    o.order_id === id
+                ).status,
+
+                payment_status
+            }
+        );
+
+        alert(
+            res.data.message
+        );
+
+        fetchOrders();
+
+    } catch (error) {
+
+        console.log(error);
+    }
+};
     return (
 
         <div
@@ -115,6 +144,9 @@ function ManageOrders() {
                         <th>
                             Total
                         </th>
+                        <th>
+    Payment Status
+</th>
 
                         <th>
                             Status
@@ -197,47 +229,84 @@ function ManageOrders() {
                                 <td>
                                     ₹ {order.total_amount}
                                 </td>
+                                   
+                                    <td>
+    {order.payment_status}
+</td>
 
                                 <td>
                                     {order.status}
                                 </td>
 
-                                <td>
+                             <td>
 
-                                    <select
+    <div
+        style={{
+            display:"flex",
+            flexDirection:"column",
+            gap:"10px"
+        }}
+    >
 
-                                        value={
-                                            order.status
-                                        }
+        <select
 
-                                        onChange={(e)=>
+            value={order.status}
 
-                                            updateStatus(
-                                                order.order_id,
-                                                e.target.value
-                                            )
-                                        }
-                                    >
+            onChange={(e)=>
 
-                                        <option>
-                                            Placed
-                                        </option>
+                updateStatus(
+                    order.order_id,
+                    e.target.value
+                )
+            }
+        >
 
-                                        <option>
-                                            Packed
-                                        </option>
+            <option>
+                Placed
+            </option>
 
-                                        <option>
-                                            Shipped
-                                        </option>
+            <option>
+                Packed
+            </option>
 
-                                        <option>
-                                            Delivered
-                                        </option>
+            <option>
+                Shipped
+            </option>
 
-                                    </select>
+            <option>
+                Delivered
+            </option>
 
-                                </td>
+        </select>
+
+        <select
+
+            value={
+                order.payment_status
+            }
+
+            onChange={(e)=>
+
+                updatePaymentStatus(
+                    order.order_id,
+                    e.target.value
+                )
+            }
+        >
+
+            <option>
+                Pending
+            </option>
+
+            <option>
+                Paid
+            </option>
+
+        </select>
+
+    </div>
+
+</td>
 
                             </tr>
                         ))
@@ -250,5 +319,6 @@ function ManageOrders() {
         </div>
     );
 }
+
 
 export default ManageOrders;

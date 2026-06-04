@@ -14,7 +14,9 @@ const {
 
     updateOrderStatus,
 
-    cancelOrder
+    cancelOrder,
+
+    downloadInvoice
 
 } = require("../controllers/orderController");
 
@@ -52,5 +54,8 @@ router.put(
     "/admin/update-status/:id",
     updateOrderStatus
 );
-
+router.get(
+    "/invoice/:id",
+    downloadInvoice
+);
 module.exports = router;

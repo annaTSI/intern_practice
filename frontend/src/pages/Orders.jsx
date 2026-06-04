@@ -35,32 +35,43 @@ function Orders() {
     }, []);
 
     const cancelOrder =
-async (id) => {
+    async (id) => {
 
-    try {
+        try {
 
-        const res =
-            await API.put(
-                `/orders/cancel/${id}`
+            const res =
+                await API.put(
+                    `/orders/cancel/${id}`
+                );
+
+            fetchOrders();
+
+        } catch (error) {
+
+            console.log(error);
+
+            alert(
+
+                error.response?.data?.message
+
+                ||
+
+                "Order Cancel Failed"
             );
+        }
+    };
 
-      
-        fetchOrders();
+    const downloadInvoice =
+    (orderId) => {
 
-    } catch (error) {
+        window.open(
 
-        console.log(error);
+            `http://localhost:5000/api/orders/invoice/${orderId}`,
 
-        alert(
+            "_blank"
+        );
+    };
 
-    error.response?.data?.message
-
-    ||
-
-    "Order Cancel Failed"
-);
-    }
-};
     return (
 
         <div
@@ -91,93 +102,136 @@ async (id) => {
                     >
 
                         <h2>
-    Order ID :
-    {order.order_id}
-</h2>
+                            Order ID :
+                            {order.order_id}
+                        </h2>
 
                         <h3>
                             Address :
                             {order.address}
                         </h3>
-                        <h3>
-
-    Phone :
-    {order.phone}
-
-</h3>
 
                         <h3>
-    Total :
-    ₹ {order.total_amount}
-</h3>
 
-<h3>
-    Payment Method :
-    {order.payment_method}
-</h3>
+                            Phone :
+                            {order.phone}
 
-<h3>
-    Payment Status :
+                        </h3>
 
-    <span
-        style={{
+                        <h3>
+                            Total :
+                            ₹ {order.total_amount}
+                        </h3>
 
-            color:
+                        <h3>
+                            Payment Method :
+                            {order.payment_method}
+                        </h3>
 
-            order.payment_status === "Paid"
+                        <h3>
 
-            ?
+                            Payment Status :
 
-            "lightgreen"
+                            <span
+                                style={{
 
-            :
+                                    color:
 
-            "#c9a96e",
+                                    order.payment_status === "Paid"
 
-            marginLeft:"8px"
-        }}
-    >
-        {order.payment_status}
-    </span>
+                                    ?
 
-</h3>
+                                    "lightgreen"
 
-<h3>
-    Status :
-    {order.status}
-</h3>
-                        {
-    order.status === "Placed" && (
+                                    :
 
-        <button
+                                    "#c9a96e",
 
-            onClick={()=>
-                cancelOrder(
-                    order.order_id
-                )
-            }
+                                    marginLeft:"8px"
+                                }}
+                            >
+                                {order.payment_status}
+                            </span>
 
-            style={{
+                        </h3>
 
-                marginTop:"15px",
+                        <h3>
+                            Status :
+                            {order.status}
+                        </h3>
 
-                padding:"10px",
+                        <div
+                            style={{
+                                marginTop:"15px"
+                            }}
+                        >
 
-                background:"#c9a96e",
+                            {
+                                order.status === "Placed" && (
 
-                color:"black",
+                                    <button
 
-                border:"none",
+                                        onClick={()=>
+                                            cancelOrder(
+                                                order.order_id
+                                            )
+                                        }
 
-                cursor:"pointer"
-            }}
-        >
+                                        style={{
 
-            Cancel Order
+                                            padding:"10px",
 
-        </button>
-    )
-}
+                                            background:"#c9a96e",
+
+                                            color:"black",
+
+                                            border:"none",
+
+                                            cursor:"pointer"
+                                        }}
+                                    >
+
+                                        Cancel Order
+
+                                    </button>
+                                )
+                            }
+
+                            {
+                                order.payment_status === "Paid" &&
+                                order.status === "Delivered" && (
+
+                                    <button
+
+                                        onClick={()=>
+                                            downloadInvoice(
+                                                order.order_id
+                                            )
+                                        }
+
+                                        style={{
+
+                                            marginLeft:"10px",
+
+                                            padding:"10px",
+
+                                            background:"green",
+
+                                            color:"white",
+
+                                            border:"none",
+
+                                            cursor:"pointer"
+                                        }}
+                                    >
+
+                                        Download Invoice
+
+                                    </button>
+                                )
+                            }
+
+                        </div>
 
                     </div>
                 ))
