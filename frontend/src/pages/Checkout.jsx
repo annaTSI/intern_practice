@@ -240,17 +240,85 @@ async () => {
 
         console.log("Selected Payment:", paymentMethod);
 
-const res =
-await API.post(
-    "/orders/place-order",
-    {
-        address,
-        phone,
-        paymentMethod
-    }
-);
+if(paymentMethod === "ONLINE"){
 
-        navigate("/orders");
+    const paymentRes =
+    await API.post(
+        "/orders/create-payment",
+        {
+            amount: totalAmount
+        }
+    );
+
+    const options = {
+
+        key:
+        "rzp_test_SxQirBFjQeAScY",
+
+        amount:
+        paymentRes.data.amount,
+
+        currency:
+        paymentRes.data.currency,
+
+        name:
+        "E-Commerce Store",
+
+        description:
+        "Order Payment",
+
+        order_id:
+        paymentRes.data.id,
+
+        handler:
+        async function(response){
+
+            await API.post(
+                "/orders/place-order",
+                {
+                    address,
+                    phone,
+                    paymentMethod,
+                    razorpay_payment_id:
+                    response.razorpay_payment_id
+                }
+            );
+
+            alert(
+                "Payment Successful"
+            );
+
+            navigate("/orders");
+        },
+
+        theme:{
+            color:"#cfa45e"
+        }
+    };
+
+    const razorpay =
+
+    new window.Razorpay(
+        options
+    );
+
+    razorpay.open();
+
+}
+
+else{
+
+    await API.post(
+        "/orders/place-order",
+        {
+            address,
+            phone,
+            paymentMethod
+        }
+    );
+
+    navigate("/orders");
+}
 
     } catch (error) {
 

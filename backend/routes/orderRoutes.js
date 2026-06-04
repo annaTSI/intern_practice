@@ -4,6 +4,8 @@ const router = express.Router();
 
 const {
 
+    createPayment,
+
     placeOrder,
 
     getMyOrders,
@@ -18,6 +20,10 @@ const {
 
 
 // USER ROUTES
+router.post(
+    "/create-payment",
+    createPayment
+);
 
 router.post(
     "/place-order",

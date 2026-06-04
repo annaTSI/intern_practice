@@ -1,4 +1,44 @@
+const razorpay =
+require("../config/razorpay");
 const db = require("../config/db");
+
+exports.createPayment =
+async (req,res) => {
+
+    try {
+
+        const { amount } =
+        req.body;
+
+        const options = {
+
+            amount:
+            amount * 100,
+
+            currency:"INR",
+
+            receipt:
+            `receipt_${Date.now()}`
+        };
+
+        const order =
+        await razorpay.orders.create(
+            options
+        );
+
+        res.json(order);
+
+    } catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:
+            "Payment creation failed"
+        });
+    }
+};
 
 
 // PLACE ORDER
@@ -19,7 +59,8 @@ exports.placeOrder =
    const {
     address,
     phone,
-    paymentMethod
+    paymentMethod,
+    razorpay_payment_id
 } = req.body;
 console.log(req.body);
 
@@ -106,14 +147,15 @@ console.log(req.body);
     phone,
     payment_method,
     payment_status,
+    razorpay_payment_id,
     status
 )
 
-VALUES (?,?,?,?,?,?,?)`;
+VALUES (?,?,?,?,?,?,?,?)`;
 
             db.query(
                 orderSql,
-                [
+               [
     user_id,
     total_amount,
     address,
@@ -125,6 +167,8 @@ VALUES (?,?,?,?,?,?,?)`;
     "Pending"
     :
     "Paid",
+
+    razorpay_payment_id || null,
 
     "Placed"
 ],
