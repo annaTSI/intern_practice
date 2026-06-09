@@ -1,10 +1,11 @@
-const path = require("path");
+process.env.DOTENV_CONFIG_QUIET = "true";
 
 require("dotenv").config({
-    path: path.join(
+    path: require("path").join(
         __dirname,
         "../.env"
-    )
+    ),
+    quiet: true
 });
 
 const db =
@@ -21,52 +22,166 @@ require("@modelcontextprotocol/sdk/server/stdio.js");
 const server =
 new McpServer({
 
-    name: "ecommerce",
+    name:"ecommerce",
 
-    version: "1.0.0"
+    version:"1.0.0"
 });
 
 server.tool(
 
     "get_orders",
 
-    "Get all orders from database",
+    "Get all orders",
+
+    {},
 
     async () => {
 
-        const [rows] =
+        return new Promise(
 
-        await db.promise().query(
+            (resolve,reject)=>{
 
-            `SELECT
-                id,
-                total_amount,
-                payment_status,
-                status
-             FROM orders
-             ORDER BY id DESC`
+                db.query(
+
+                    `
+                    SELECT
+                    id,
+                    total_amount,
+                    status
+                    FROM orders
+                    ORDER BY id DESC
+                    `,
+
+                    (err,result)=>{
+
+                        if(err){
+
+                            reject(err);
+                            return;
+                        }
+
+                        resolve({
+
+                            content:[
+                                {
+                                    type:"text",
+                                    text:JSON.stringify(
+                                        result,
+                                        null,
+                                        2
+                                    )
+                                }
+                            ]
+                        });
+                    }
+                );
+            }
         );
-
-        return {
-
-            content: [
-
-                {
-                    type: "text",
-
-                    text:
-                    JSON.stringify(
-                        rows,
-                        null,
-                        2
-                    )
-                }
-            ]
-        };
     }
 );
+server.tool(
+  "get_products",
+  "Get all products",
+  {},
+  async () => {
+    return new Promise((resolve, reject) => {
 
-async function main() {
+      db.query(
+        `SELECT id,name,price,stock,category
+         FROM products`,
+        (err, result) => {
+
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve({
+            content: [{
+              type: "text",
+              text: JSON.stringify(result, null, 2)
+            }]
+          });
+        }
+      );
+
+    });
+  }
+);
+server.tool(
+  "get_users",
+  "Get all users",
+  {},
+  async () => {
+
+    return new Promise((resolve,reject)=>{
+
+      db.query(
+        `SELECT id,name,email
+         FROM users`,
+        (err,result)=>{
+
+          if(err){
+            reject(err);
+            return;
+          }
+
+          resolve({
+            content:[{
+              type:"text",
+              text:JSON.stringify(
+                result,
+                null,
+                2
+              )
+            }]
+          });
+
+        }
+      );
+
+    });
+
+  }
+);
+server.tool(
+  "get_reviews",
+  "Get all reviews",
+  {},
+  async () => {
+
+    return new Promise((resolve,reject)=>{
+
+      db.query(
+        `SELECT *
+         FROM reviews`,
+        (err,result)=>{
+
+          if(err){
+            reject(err);
+            return;
+          }
+
+          resolve({
+            content:[{
+              type:"text",
+              text:JSON.stringify(
+                result,
+                null,
+                2
+              )
+            }]
+          });
+
+        }
+      );
+
+    });
+
+  }
+);
+
+async function main(){
 
     const transport =
     new StdioServerTransport();
@@ -76,10 +191,4 @@ async function main() {
     );
 }
 
-main().catch(
-
-    (error) => {
-
-        console.error(error);
-    }
-);
+main().catch(console.error);
