@@ -26,6 +26,7 @@ new McpServer({
 
     version:"1.0.0"
 });
+const { z } = require("zod");
 
 server.tool(
 
@@ -179,6 +180,59 @@ server.tool(
     });
 
   }
+);
+server.tool(
+
+    "get_order_details",
+
+    "Get order by ID",
+
+    {
+        orderId: z.number()
+    },
+
+    async ({ orderId }) => {
+
+        return new Promise(
+
+            (resolve,reject)=>{
+
+                db.query(
+
+                    `
+                    SELECT *
+                    FROM orders
+                    WHERE id = ?
+                    `,
+
+                    [orderId],
+
+                    (err,result)=>{
+
+                        if(err){
+
+                            reject(err);
+                            return;
+                        }
+
+                        resolve({
+
+                            content:[
+                                {
+                                    type:"text",
+                                    text:JSON.stringify(
+                                        result,
+                                        null,
+                                        2
+                                    )
+                                }
+                            ]
+                        });
+                    }
+                );
+            }
+        );
+    }
 );
 
 async function main(){
